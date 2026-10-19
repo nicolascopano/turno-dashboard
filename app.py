@@ -623,6 +623,15 @@ header[data-testid="stHeader"] {
     height: 3px;
     background: linear-gradient(90deg, #a855f7, #6366f1);
 }
+.super-guard-card.debate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f97316, #ef4444);
+}
 .super-guard-header {
     display: flex;
     justify-content: space-between;
@@ -666,6 +675,11 @@ header[data-testid="stHeader"] {
     background: rgba(168, 85, 247, 0.15);
     color: #c084fc;
     border: 1px solid rgba(168, 85, 247, 0.35);
+}
+.super-guard-badge.fire {
+    background: rgba(249, 115, 22, 0.15);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.35);
 }
 .super-guard-val {
     font-size: 1.85rem;
@@ -883,12 +897,13 @@ def render_kpi_strip() -> None:
             target=k1,
         )
     with k2:
-        v24 = df_24h["views"].sum()
+        v72 = df_72h["views"].sum()
+        n_72 = len(df_72h)
         render_html(
             f"""<div class="kpi-card">
-              <div class="k-label">Vistas Últimas 24h</div>
-              <div class="k-value">{fmt(v24)}</div>
-              <div class="k-sub">{n_24h} piezas ({fmt(df_today['views'].sum())} hoy)</div>
+              <div class="k-label">Vistas Ciclo (72h)</div>
+              <div class="k-value">{fmt(v72)}</div>
+              <div class="k-sub">{n_72} piezas ({fmt(df_today['views'].sum())} hoy)</div>
             </div>""",
             target=k2,
         )
@@ -974,7 +989,7 @@ def render_feed_grid(frame: pd.DataFrame, per_row: int = 4) -> None:
 # ==============================================================================
 tab_super, tab_pulse, tab_editorial, tab_archive = st.tabs(
     [
-        "🩺 1. Supervigilancia (Hoy)",
+        "🩺 1. Supervigilancia (Guardia & Ciclo)",
         "⚡ 2. El Pulso (Feed en Vivo)",
         "🧠 3. Consejo Editorial & Pauta",
         "📊 4. Hemeroteca & Explorador",
@@ -1035,16 +1050,16 @@ with tab_super:
     # 2. Las 4 Grandes Preguntas de Supervigilancia
     c_q1, c_q2, c_q3, c_q4 = st.columns(4)
 
-    # Pregunta 1: ¿Cuánto se produjo en total hoy?
+    # Pregunta 1: ¿Cuánto se produjo en la Guardia (Hoy)?
     with c_q1:
         tot_color_cls = "text-ok" if n_today >= daily_goal else ("text-warn" if n_today >= daily_goal * 0.5 else "text-bad")
         render_html(
             f"""<div class="super-kpi-card tot">
-              <div class="super-kpi-question">¿Cuánto se produjo en total hoy? <span>📦</span></div>
+              <div class="super-kpi-question">¿Cuánto se produjo en la Guardia (Hoy)? <span>📦</span></div>
               <div class="super-kpi-val"><span class="{tot_color_cls}">{n_today}</span> <span style="font-size:1.15rem;color:#64748b;font-weight:600">/ {daily_goal} piezas</span></div>
               <div class="super-kpi-sub">
                 <b>{pct_goal}%</b> de la meta diaria cumplida<br>
-                Meta calculada sobre promedio semanal (<b>{weekly_avg_daily:.1f}</b> piezas/día)
+                Meta calculada sobre promedio semanal (7 días: <b>{weekly_avg_daily:.1f}</b> piezas/día)
               </div>
             </div>""",
             target=c_q1,
@@ -1086,19 +1101,18 @@ with tab_super:
             target=c_q3,
         )
 
-    # Pregunta 4: ¿Cuánta audiencia se generó hoy?
+    # Pregunta 4: ¿Cuánta audiencia acumulada?
     v_total_today = int(df_today["views"].sum())
-    v_24h = int(df_24h["views"].sum())
     v_72h = int(df_72h["views"].sum())
 
     with c_q4:
         render_html(
             f"""<div class="super-kpi-card aud">
-              <div class="super-kpi-question">¿Cuánta audiencia hoy? <span>📈</span></div>
-              <div class="super-kpi-val">{fmt(v_total_today)} <span style="font-size:1.15rem;color:#cbd5e1;font-weight:600">vistas</span></div>
+              <div class="super-kpi-question">¿Cuánta audiencia acumulada? <span>📈</span></div>
+              <div class="super-kpi-val">{fmt(v_total_today)} <span style="font-size:1.15rem;color:#cbd5e1;font-weight:600">vistas hoy</span></div>
               <div class="super-kpi-sub">
-                🔴 YT: <b>{fmt(yt_v_today)}</b> · 🟣 IG: <b>{fmt(ig_v_today)}</b><br>
-                Últimas 24h: <b>{fmt(v_24h)}</b> · Base 72h: <b>{fmt(v_72h)}</b> vistas
+                🔴 YT: <b>{fmt(yt_v_today)}</b> · 🟣 IG: <b>{fmt(ig_v_today)}</b> hoy<br>
+                🔄 Ciclo Activo (72h Base): <b>{fmt(v_72h)}</b> vistas totales
               </div>
             </div>""",
             target=c_q4,
@@ -1106,9 +1120,9 @@ with tab_super:
 
     st.write("")
 
-    # 3. Pulso de Guardia: Ritmo de Emisión & Protagonista del Día
-    st.markdown("### ⚡ Pulso de Guardia (Ritmo & Protagonista)")
-    g_col1, g_col2 = st.columns(2)
+    # 3. Pulso de Guardia: Ritmo, Protagonista & Debate
+    st.markdown("### ⚡ Pulso de Guardia (Ritmo, Protagonista & Debate)")
+    g_col1, g_col2, g_col3 = st.columns(3)
 
     # Cálculo 1: Semáforo de Silencio
     yt_last = yt_all.iloc[-1] if not yt_all.empty else None
@@ -1151,27 +1165,22 @@ with tab_super:
             target=g_col1,
         )
 
-    # Cálculo 2: Protagonista / Rostro del Día
+    # Cálculo 2: Protagonista / Rostro del Ciclo Activo (72h)
     ent_today = analytics.compute_entity_ranking(df_today, min_pieces=1)
     if not ent_today.empty:
         top_ent = ent_today.iloc[0]
         ent_window = "HOY"
     else:
-        ent_24 = analytics.compute_entity_ranking(df_24h, min_pieces=1)
-        if not ent_24.empty:
-            top_ent = ent_24.iloc[0]
-            ent_window = "ÚLTIMAS 24H"
-        else:
-            ent_72 = analytics.compute_entity_ranking(df_72h, min_pieces=1)
-            top_ent = ent_72.iloc[0] if not ent_72.empty else None
-            ent_window = "BASE 72H"
+        ent_72 = analytics.compute_entity_ranking(df_72h, min_pieces=1)
+        top_ent = ent_72.iloc[0] if not ent_72.empty else None
+        ent_window = "CICLO 72H"
 
     with g_col2:
         if top_ent is not None:
             ent_name = str(top_ent["entities"])
             ent_mult = float(top_ent["perf_score"])
             ent_badge = f"🔥 {ent_mult:.2f}x s/mediana" if ent_mult >= 1.0 else f"{ent_mult:.2f}x"
-            best_t = escape(str(top_ent.get("best_title", ""))[:70])
+            best_t = escape(str(top_ent.get("best_title", ""))[:65])
             render_html(
                 f"""<div class="super-guard-card face">
                   <div>
@@ -1208,26 +1217,75 @@ with tab_super:
                 target=g_col2,
             )
 
+    # Cálculo 3: Termómetro de Polémica (Pieza más comentada / debatida del Ciclo 72h)
+    valid_debate = df_72h[df_72h["views"] >= 50].copy()
+    with g_col3:
+        if not valid_debate.empty:
+            polemic_piece = valid_debate.sort_values("debate_rate", ascending=False).iloc[0]
+            pol_title = escape(str(polemic_piece["title"])[:65])
+            pol_rate = float(polemic_piece["debate_rate"])
+            pol_comments = int(polemic_piece["comments"])
+            pol_views = int(polemic_piece["views"])
+            pol_plat = str(polemic_piece["platform"])
+            pol_url = str(polemic_piece["url"])
+            render_html(
+                f"""<a class="clean-link" href="{escape(pol_url)}" target="_blank">
+                  <div class="super-guard-card debate">
+                    <div>
+                      <div class="super-guard-header">
+                        <span class="super-guard-title">💬 Termómetro de Polémica (72h)</span>
+                        <span class="super-guard-badge fire">🔥 {pol_rate:.1f} COM / 1K</span>
+                      </div>
+                      <div class="super-guard-val">{fmt(pol_comments)} <span style="font-size:1.05rem;color:#fb923c;font-weight:600">comentarios ↗</span></div>
+                      <div class="super-guard-desc">«{pol_title}…»</div>
+                    </div>
+                    <div class="super-guard-subgrid">
+                      <div>💬 <b>{pol_rate:.1f}</b> com / 1K vistas<br><span style="color:#64748b">Mayor fricción de audiencia</span></div>
+                      <div>📈 <b>{fmt(pol_views)} vistas</b><br><span style="color:#64748b">En {pol_plat}</span></div>
+                    </div>
+                  </div>
+                </a>""",
+                target=g_col3,
+            )
+        else:
+            render_html(
+                """<div class="super-guard-card debate">
+                  <div>
+                    <div class="super-guard-header">
+                      <span class="super-guard-title">💬 Termómetro de Polémica (72h)</span>
+                      <span class="super-guard-badge fire">CALMA EDITORIAL</span>
+                    </div>
+                    <div class="super-guard-val">Debate Estable</div>
+                    <div class="super-guard-desc">Conversación fluida sin picos anómalos de conflicto en los comentarios.</div>
+                  </div>
+                  <div class="super-guard-subgrid">
+                    <div>💬 <b>Interacción normal</b></div>
+                    <div>📈 <b>Comunidad alineada</b></div>
+                  </div>
+                </div>""",
+                target=g_col3,
+            )
+
     st.write("")
 
-    # 4. Las 2 Joyas del Día (Éxitos de Hoy)
-    st.markdown("### 🏆 Los Éxitos del Día (Piezas Líderes)")
+    # 4. Las 2 Joyas del Día (Éxitos de Hoy o del Ciclo)
+    st.markdown("### 🏆 Los Éxitos de la Jornada (Piezas Líderes)")
 
     if not yt_today_df.empty:
         yt_hit = yt_today_df.sort_values("views", ascending=False).iloc[0]
         yt_crown_label = "👑 ÉXITO YOUTUBE DE HOY"
     else:
-        yt_24h_df = df_24h[df_24h["platform"] == "YouTube"]
-        yt_hit = yt_24h_df.sort_values("views", ascending=False).iloc[0] if not yt_24h_df.empty else None
-        yt_crown_label = "⭐ LÍDER YOUTUBE (ÚLTIMAS 24H)"
+        yt_72h_df = df_72h[df_72h["platform"] == "YouTube"]
+        yt_hit = yt_72h_df.sort_values("views", ascending=False).iloc[0] if not yt_72h_df.empty else None
+        yt_crown_label = "⭐ LÍDER YOUTUBE (CICLO 72H)"
 
     if not ig_today_df.empty:
         ig_hit = ig_today_df.sort_values("views", ascending=False).iloc[0]
         ig_crown_label = "👑 ÉXITO INSTAGRAM DE HOY"
     else:
-        ig_24h_df = df_24h[df_24h["platform"] == "Instagram"]
-        ig_hit = ig_24h_df.sort_values("views", ascending=False).iloc[0] if not ig_24h_df.empty else None
-        ig_crown_label = "⭐ LÍDER INSTAGRAM (ÚLTIMAS 24H)"
+        ig_72h_df = df_72h[df_72h["platform"] == "Instagram"]
+        ig_hit = ig_72h_df.sort_values("views", ascending=False).iloc[0] if not ig_72h_df.empty else None
+        ig_crown_label = "⭐ LÍDER INSTAGRAM (CICLO 72H)"
 
     hit_col1, hit_col2 = st.columns(2)
 
@@ -1363,7 +1421,7 @@ with tab_super:
             st.code(brief_text, language=None, wrap_lines=True)
 
 # ------------------------------------------------------------------------------
-# TAB 2: EL PULSO DE HOY Y 24 HORAS (FEED EN VIVO)
+# TAB 2: EL PULSO DEL CICLO Y GUARDIA (FEED EN VIVO)
 # ------------------------------------------------------------------------------
 with tab_pulse:
     render_kpi_strip()
@@ -1372,7 +1430,7 @@ with tab_pulse:
     with f_c1:
         pulse_scope = st.radio(
             "Ventana temporal",
-            ["Últimas 72 horas (Base)", "Solo hoy (desde 00:00)", "Últimas 24 horas"],
+            ["🔄 Ciclo Activo (72h Base)", "🔴 La Guardia (Solo Hoy)", "📅 Semana Completa (7 días)"],
             horizontal=True,
             label_visibility="collapsed",
         )
@@ -1393,10 +1451,10 @@ with tab_pulse:
         filter_prog = st.selectbox("Filtrar canal o programa", all_progs, label_visibility="collapsed")
 
     # Filtrado reactivo
-    if pulse_scope == "Solo hoy (desde 00:00)":
+    if pulse_scope == "🔴 La Guardia (Solo Hoy)":
         pulse_df = df_today.copy()
-    elif pulse_scope == "Últimas 24 horas":
-        pulse_df = df_24h.copy()
+    elif pulse_scope == "📅 Semana Completa (7 días)":
+        pulse_df = df_7d.copy()
     else:
         pulse_df = df_72h.copy()
 
