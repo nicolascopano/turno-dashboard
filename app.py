@@ -708,6 +708,218 @@ header[data-testid="stHeader"] {
 .super-guard-subgrid b {
     color: #ffffff;
 }
+
+.super-guard-badge.rocket {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+}
+.super-guard-badge.eje {
+    background: rgba(168, 85, 247, 0.15);
+    color: #c084fc;
+    border: 1px solid rgba(168, 85, 247, 0.35);
+}
+.super-guard-badge.radar {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+/* ==========================================================================
+   EL ORÁCULO DE CONCEPTOS & FIGURAS (NUBE DE PAUTA VIVA)
+   ========================================================================== */
+.oracle-container {
+    background: linear-gradient(135deg, #090e1a 0%, #060913 100%);
+    border: 1px solid rgba(168, 85, 247, 0.28);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-top: 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+.oracle-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #a855f7, #ec4899, #38bdf8);
+}
+.oracle-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.oracle-title {
+    font-size: 1.18rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.oracle-subtitle {
+    font-size: 0.84rem;
+    color: #94a3b8;
+    margin-bottom: 18px;
+    line-height: 1.45;
+}
+.oracle-cloud-board {
+    background: rgba(13, 19, 34, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 24px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 16px;
+    min-height: 150px;
+}
+.oracle-tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: default;
+    line-height: 1.2;
+}
+.oracle-tag-pill:hover {
+    transform: translateY(-2px) scale(1.04);
+    background: rgba(255, 255, 255, 0.08);
+}
+.oracle-tag-pill.fire {
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.06);
+}
+.oracle-tag-pill.fire:hover {
+    border-color: rgba(239, 68, 68, 0.8);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+}
+.oracle-tag-pill.rocket {
+    border-color: rgba(56, 189, 248, 0.4);
+    color: #7dd3fc;
+    background: rgba(56, 189, 248, 0.06);
+}
+.oracle-tag-pill.rocket:hover {
+    border-color: rgba(56, 189, 248, 0.8);
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+}
+.oracle-tag-pill.eje {
+    border-color: rgba(168, 85, 247, 0.4);
+    color: #d8b4fe;
+    background: rgba(168, 85, 247, 0.06);
+}
+.oracle-tag-pill.eje:hover {
+    border-color: rgba(168, 85, 247, 0.8);
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.25);
+}
+.oracle-tag-pill.radar {
+    border-color: rgba(148, 163, 184, 0.25);
+    color: #cbd5e1;
+    background: rgba(148, 163, 184, 0.04);
+}
+.oracle-tag-pill-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.45);
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+}
+
+/* Ficha del Oráculo (Inspector) */
+.oracle-card-detail {
+    background: #0b1120;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-top: 14px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+}
+.oracle-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.oracle-name-big {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.01em;
+}
+.oracle-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+.oracle-kpi-chip {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 8px 12px;
+    text-align: center;
+}
+.oracle-kpi-lbl {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.oracle-kpi-val {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin-top: 2px;
+}
+.oracle-section-block {
+    background: rgba(255, 255, 255, 0.025);
+    border-left: 3px solid #38bdf8;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #cbd5e1;
+}
+.oracle-section-block.hook {
+    border-left-color: #ec4899;
+}
+.oracle-section-block.fmt {
+    border-left-color: #34d399;
+}
+.oracle-section-title {
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+    color: #ffffff;
+}
 </style>
 """
 
@@ -989,9 +1201,9 @@ def render_feed_grid(frame: pd.DataFrame, per_row: int = 4) -> None:
 # ==============================================================================
 tab_super, tab_pulse, tab_editorial, tab_archive = st.tabs(
     [
-        "🩺 1. Supervigilancia (Guardia & Ciclo)",
+        "🩺 1. Supervigilancia & Pauta (La Guardia)",
         "⚡ 2. El Pulso (Feed en Vivo)",
-        "🧠 3. Consejo Editorial & Pauta",
+        "🧠 3. Consejo Editorial & Estrategia",
         "📊 4. Hemeroteca & Explorador",
     ]
 )
@@ -1419,6 +1631,117 @@ with tab_super:
         with st.popover("👁️ Previsualizar Prompt para el Bot Rastreador"):
             st.caption("Texto de pauta listo para copiar y pegar en tu bot de rastreo:")
             st.code(brief_text, language=None, wrap_lines=True)
+
+    # 6. EL ORÁCULO DE CONCEPTOS & FIGURAS (NUBE DE PAUTA VIVA)
+    concept_cloud = analytics.compute_concept_oracle_cloud(df_win)
+    if concept_cloud:
+        tag_htmls = []
+        for c in concept_cloud:
+            font_sz = c["font_size_rem"]
+            font_w = c["font_weight"]
+            cls_type = c["heat_type"]
+            name_esc = escape(c["name"])
+            badge_esc = escape(c["heat_badge"])
+            tag_htmls.append(
+                f'<span class="oracle-tag-pill {cls_type}" style="font-size:{font_sz}rem;font-weight:{font_w};">'
+                f'{name_esc} <span class="oracle-tag-pill-badge">{badge_esc}</span>'
+                f'</span>'
+            )
+        cloud_tags_str = "\n".join(tag_htmls)
+
+        render_html(
+            f"""<div class="oracle-container">
+              <div class="oracle-head">
+                <div class="oracle-title">
+                  <span>🔮 ORÁCULO DE CONCEPTOS & FIGURAS · NUBE DE PAUTA VIVA</span>
+                </div>
+                <span class="micro-tag" style="background:rgba(168,85,247,0.18);border:1px solid rgba(168,85,247,0.45);color:#d8b4fe">
+                  {len(concept_cloud)} CONCEPTOS ACTIVOS EN EL CICLO
+                </span>
+              </div>
+              <div class="oracle-subtitle">
+                El tamaño de cada concepto refleja su volumen acumulado de piezas, vistas e impacto en la audiencia. 
+                Los colores señalan la temperatura de la conversación: 
+                🔴 <b style="color:#fca5a5">Alta Polémica</b> (fricción en comentarios) · 
+                🚀 <b style="color:#7dd3fc">Imán Algorítmico</b> (tracción s/mediana) · 
+                🟣 <b style="color:#d8b4fe">Eje Central</b> (frecuencia sostenida).
+              </div>
+              <div class="oracle-cloud-board">
+                {cloud_tags_str}
+              </div>
+            </div>""",
+            target=tab_super,
+        )
+
+        # Inspector interactivo del Oráculo
+        or_c1, or_c2 = st.columns([2.8, 1.2])
+        with or_c1:
+            sel_oracle_name = st.selectbox(
+                "🔮 Selecciona un concepto o figura para consultar la bajada editorial del Oráculo:",
+                [c["name"] for c in concept_cloud],
+                index=0,
+                key="sel_oracle_concept",
+                help="Selecciona cualquier concepto o figura de la nube para ver por qué creció y cómo usarlo en la pauta de hoy.",
+            )
+        selected_item = next((c for c in concept_cloud if c["name"] == sel_oracle_name), concept_cloud[0])
+        with or_c2:
+            st.write("")
+            st.caption(f"📌 **{selected_item['category']}**<br>Prioridad: **#{concept_cloud.index(selected_item) + 1}** en peso relativo.")
+
+        render_html(
+            f"""<div class="oracle-card-detail">
+              <div class="oracle-card-head">
+                <div class="oracle-name-big">
+                  🔮 {escape(selected_item['name'])}
+                  <span class="super-guard-badge {selected_item['heat_type']}">
+                    {escape(selected_item['heat_label'])} · {escape(selected_item['heat_badge'])}
+                  </span>
+                </div>
+                <span class="micro-tag" style="color:#94a3b8;border-color:rgba(255,255,255,0.15)">
+                  {escape(selected_item['category'])}
+                </span>
+              </div>
+              <div class="oracle-kpi-row">
+                <div class="oracle-kpi-chip">
+                  <div class="oracle-kpi-lbl">Presencia en Ciclo</div>
+                  <div class="oracle-kpi-val">{selected_item['pieces']} piezas</div>
+                </div>
+                <div class="oracle-kpi-chip">
+                  <div class="oracle-kpi-lbl">Vistas Acumuladas</div>
+                  <div class="oracle-kpi-val">{fmt(selected_item['total_views'])}</div>
+                </div>
+                <div class="oracle-kpi-chip">
+                  <div class="oracle-kpi-lbl">Tracción Algorítmica</div>
+                  <div class="oracle-kpi-val" style="color:#38bdf8">{selected_item['avg_perf']:.2f}x</div>
+                </div>
+                <div class="oracle-kpi-chip">
+                  <div class="oracle-kpi-lbl">Temperatura Debate</div>
+                  <div class="oracle-kpi-val" style="color:#fb923c">{selected_item['avg_debate']:.1f} com/1K</div>
+                </div>
+              </div>
+              <div class="oracle-section-block">
+                <div class="oracle-section-title">🧠 Diagnóstico del Oráculo (¿Por qué se mueve en la audiencia?)</div>
+                {escape(selected_item['oracle_diagnostic'])}
+              </div>
+              <div class="oracle-section-block hook">
+                <div class="oracle-section-title" style="color:#f472b6">🎯 Acción de Pauta & Gancho Sugerido para Hoy</div>
+                <b>{escape(selected_item['oracle_hook'])}</b>
+              </div>
+              <div class="oracle-section-block fmt">
+                <div class="oracle-section-title" style="color:#34d399">🎬 Formato Recomendado</div>
+                {escape(selected_item['oracle_format'])}
+              </div>
+              <div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span style="font-size:0.82rem;color:#94a3b8">
+                  👑 <b>Nota líder con este concepto:</b> «{escape(selected_item['top_title'][:70])}» ({fmt(selected_item['top_views'])} vistas en {escape(selected_item['top_platform'])})
+                </span>
+                <a href="{escape(selected_item['top_url'])}" target="_blank" class="clean-link" style="font-size:0.82rem;color:#38bdf8;font-weight:700">
+                  Ver publicación ↗
+                </a>
+              </div>
+            </div>""",
+            target=tab_super,
+        )
 
 # ------------------------------------------------------------------------------
 # TAB 2: EL PULSO DEL CICLO Y GUARDIA (FEED EN VIVO)

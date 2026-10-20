@@ -348,3 +348,298 @@ def generate_projections_and_actions(df: pd.DataFrame, topic_df: pd.DataFrame, e
             break
 
     return result
+
+
+# ==============================================================================
+# EL ORÁCULO CONCEPTUAL: CATÁLOGOS Y NUBE PONDERADA DE PAUTA
+# ==============================================================================
+
+FIGURES_CATALOG: list[tuple[str, list[str], str, str, str]] = [
+    (
+        "Kast",
+        ["kast", "republicano", "republicanos", "squella"],
+        "👤 Figura Política",
+        "Polarización intensa y alta fricción en comentarios. La audiencia entra a defender o atacar de forma inmediata.",
+        "Titular con choque de versiones o pregunta directa: «¿Acierta Kast con esta jugada o se aísla?». Abrir sondeo en vivo en el chat.",
+    ),
+    (
+        "Mayol",
+        ["mayol", "cosa nostra", "alberto mayol"],
+        "👤 Analista / Academia",
+        "Alta retención reflexiva y debate político de fondo. Atrae público informado que busca marcos de interpretación y pronósticos.",
+        "Titular de pronóstico o revelación: «El giro que nadie vio: Mayol desmenuza lo que viene tras...». Destacar una frase provocadora en la portada.",
+    ),
+    (
+        "Boric",
+        ["boric", "gabriel boric", "la moneda"],
+        "👤 Presidente / Gobierno",
+        "Foco de escrutinio permanente. Genera alta interacción tanto de respaldo ciudadano como de crítica opositora frontal.",
+        "Titular sobre contradicción o coste político: «La encrucijada de Boric: ¿ceder o resistir?». Poner el foco en el impacto ciudadano.",
+    ),
+    (
+        "Tohá",
+        ["toha", "carolina toha", "interior"],
+        "👤 Ministra / Interior",
+        "Vinculada a crisis de seguridad y conducción de crisis. Fuerte presión sobre respuestas concretas y declaraciones públicas.",
+        "Titular de rendición de cuentas: «Las preguntas sin responder que complican a Tohá». Contrastar promesas con los hechos.",
+    ),
+    (
+        "Monsalve",
+        ["monsalve", "manuel monsalve"],
+        "👤 Caso Monsalve / Judicial",
+        "Alta curiosidad morbosa y demanda de transparencia judicial. El público busca novedades procesales y cronología de hechos.",
+        "Titular cronológico: «El minuto a minuto que nadie contó del caso Monsalve». Usar datos de la investigación.",
+    ),
+    (
+        "Pancho Vidal",
+        ["vidal", "pancho vidal"],
+        "👤 TVN / Exvocero",
+        "Excelente gancho televisivo para explicar historia reciente y política sin filtro. Genera cercanía y comentarios nostálgicos o irónicos.",
+        "Titular en clave de lección o choque: «Vidal sin filtro: la dura respuesta a...». Usar citas textuales punzantes.",
+    ),
+    (
+        "Cathy Barriga",
+        ["barriga", "cathy barriga", "maipu"],
+        "👤 Farándula / Judicial",
+        "Tracción transversal masiva en redes. Cruce de indignación por platas públicas con espectáculo y consumo de contenido visual.",
+        "Titular de contraste: «De la TV al tribunal: el nuevo capítulo judicial de Cathy Barriga». Formato rápido para Instagram/Shorts.",
+    ),
+    (
+        "Hermosilla",
+        ["hermosilla", "caso audios", "luis hermosilla"],
+        "👤 Caso Audios / Poder",
+        "Símbolo de la cocina del poder y los privilegios. La audiencia reacciona con rabia y demanda de sanciones ejemplares.",
+        "Titular de revelación documental: «El chat que faltaba: la red de influencias de Hermosilla al descubierto».",
+    ),
+    (
+        "Vivanco",
+        ["vivanco", "angela vivanco", "corte suprema", "migueles"],
+        "👤 Poder Judicial / Suprema",
+        "Pérdida de confianza en las instituciones. Ideal para contrastar fallos y tráfico de influencias en altas esferas.",
+        "Titular de quiebre institucional: «¿Por qué cayó Vivanco? Las claves de la trama oculta en la Corte Suprema».",
+    ),
+    (
+        "Matthei",
+        ["matthei", "evelyn matthei", "providencia"],
+        "👤 Oposición / UDI",
+        "Foco de proyección presidencial y orden en la centroderecha. Genera debate sobre liderazgo y disputas con Republicanos.",
+        "Titular de estrategia electoral: «El dilema de Matthei frente al avance de la ultraderecha». Sondeo sobre competitividad.",
+    ),
+    (
+        "Macaya",
+        ["macaya", "senador macaya"],
+        "👤 UDI / Caso Macaya",
+        "Fuerte cuestionamiento ético. Alto volumen de rechazo y comentarios críticos en todas las plataformas.",
+        "Titular de impacto ético: «El quiebre interno en la derecha tras el caso Macaya». Enfoque en consecuencias políticas.",
+    ),
+    (
+        "Javier Milei",
+        ["milei", "javier milei", "argentina"],
+        "👤 Internacional / Cono Sur",
+        "Magnetismo algorítmico asegurado. Discurso disruptivo que polariza entre fanatismo libertario y rechazo visceral.",
+        "Titular reactivo de alta velocidad: «Milei contraataca: la polémica frase que encendió la región».",
+    ),
+    (
+        "M.J. Quintanilla",
+        ["quintanilla", "maria jose"],
+        "👤 TV & Cultura Popular",
+        "Empatía masiva y viralidad en formatos cortos. Excelente para distender la pauta con temas de la vida real.",
+        "Titular de empatía y verdad: «María José Quintanilla sacó la voz: el descargo que conmovió a las redes».",
+    ),
+    (
+        "Isabel Allende",
+        ["allende", "isabel allende", "planeta"],
+        "👤 Cultura / Literatura",
+        "Orgullo cultural y prestigio de marca. Fideliza a la audiencia de mayor edad y aporta valor reflexivo.",
+        "Titular de homenaje o reflexión: «Isabel Allende hace historia: la lección que deja a Chile».",
+    ),
+    (
+        "Paulina Toro",
+        ["paulina toro", "ciper"],
+        "👤 Periodismo de Investigación",
+        "Máxima credibilidad editorial. Cuando interviene, la audiencia asume que hay datos duros y revelaciones exclusivas.",
+        "Titular investigativo: «Paulina Toro revela el trasfondo que no salió en la televisión».",
+    ),
+    (
+        "Sammy Tarot",
+        ["sammy", "tarot", "horoscopo"],
+        "👤 Viral & Tendencias",
+        "Curiosidad mística y descompresión. Excelente retención en streaming para segmentos distendidos.",
+        "Titular de intriga o futuro: «¿Qué le depara a Chile? Las predicciones de Sammy que dejaron helados a todos».",
+    ),
+]
+
+CONCEPTS_CATALOG: list[tuple[str, list[str], str, str, str]] = [
+    (
+        "Seguridad & Crimen",
+        ["seguridad", "crimen", "carabineros", "delincuencia", "violencia", "homicidio", "tren de aragua", "carceles"],
+        "🛡️ Orden & Seguridad",
+        "La preocupación ciudadana #1. La audiencia exige datos certeros, contexto territorial y rendición de cuentas policial.",
+        "Titular con dato duro y terreno: «La radiografía del crimen que el Gobierno no detalló». Acompañar con infografía.",
+    ),
+    (
+        "Bolsillo & AFP",
+        ["bolsillo", "afp", "pensiones", "costo de vida", "sueldo", "inflacion", "tag", "arriendo", "luz"],
+        "💰 Economía & Bolsillo",
+        "Impacto directo en la vida diaria. Tracciona cuando se explica con manzanas cómo afecta el dinero familiar.",
+        "Titular en clave de bolsillo: «¿Cuánto sube realmente tu cuenta este mes? El cálculo que debes hacer».",
+    ),
+    (
+        "Corrupción & Audios",
+        ["corrupcion", "audios", "traicion", "migueles", "chadwick", "impunidad", "fiscalia", "soborno"],
+        "⚖️ Justicia & Poder",
+        "Indignación ética transversal. Los usuarios buscan detalles de las filtraciones y chats que revelan la cocina política.",
+        "Titular sobre impunidad: «Los audios que nadie quería que escucharas: cómo operaba la red de poder».",
+    ),
+    (
+        "Estallido & 18-O",
+        ["estallido", "18-o", "18 de octubre", "cal y canto", "violencia"],
+        "🔥 Tensión Social",
+        "Herida abierta y batalla de relatos históricos. Provoca choques feroces entre defensores del cambio y partidarios del orden.",
+        "Titular de balance histórico: «A 7 años del 18-O: ¿qué ganó y qué perdió Chile realmente?».",
+    ),
+    (
+        "Elecciones & Presidencial",
+        ["elecciones", "candidatura", "candidatos", "encuesta", "cadem", "criterio", "primarias", "presidencial"],
+        "🗳️ Carrera Electoral",
+        "El juego del poder y las proyecciones. Interesa para proyectar quién sube, quién baja y qué alianzas se quiebran.",
+        "Titular de pugna de poder: «La encuesta que reordena el tablero presidencial: quiénes suben y quiénes se desploman».",
+    ),
+    (
+        "Presupuesto & Hacienda",
+        ["presupuesto", "hacienda", "marcel", "recursos", "gasto publico", "plata"],
+        "📊 Finanzas Públicas",
+        "Discusión técnica que necesita traducción periodística simple. Buen rendimiento si se enfoca en prioridades vs promesas.",
+        "Titular de prioridades fiscales: «¿En qué se va la plata de todos los chilenos? Las partidas más cuestionadas».",
+    ),
+    (
+        "Cultura Pop & Cringe",
+        ["cringe", "bad gyal", "taylor swift", "concierto", "festival", "viral", "tiktok", "farandula"],
+        "✨ Tendencias Pop",
+        "Válvula de escape de la agenda pesada. Atrae audiencia joven y refresca el algoritmo de Instagram y Shorts.",
+        "Titular desenfadado: «El fenómeno viral del que todos hablan en redes pero nadie se atreve a explicar».",
+    ),
+]
+
+
+def compute_concept_oracle_cloud(df: pd.DataFrame) -> list[dict]:
+    """Genera la nube ponderada de conceptos y figuras del ciclo con diagnóstico editorial (El Oráculo)."""
+    if df.empty:
+        return []
+
+    results = []
+    titles_lower = df["title"].fillna("").str.lower()
+    full_text_lower = df.get("full_text", pd.Series([""] * len(df))).fillna("").str.lower()
+
+    all_catalog = [
+        (name, kws, cat, diag, hook, "figura")
+        for (name, kws, cat, diag, hook) in FIGURES_CATALOG
+    ] + [
+        (name, kws, cat, diag, hook, "concepto")
+        for (name, kws, cat, diag, hook) in CONCEPTS_CATALOG
+    ]
+
+    for name, kws, category, base_diag, base_hook, kind in all_catalog:
+        kws_norm = [_norm(k) for k in kws]
+        mask = titles_lower.apply(lambda t: any(k in _norm(t) for k in kws_norm)) | full_text_lower.apply(
+            lambda ft: any(k in _norm(ft) for k in kws_norm)
+        )
+        matches = df[mask]
+        if matches.empty:
+            continue
+
+        pieces = len(matches)
+        total_views = int(matches["views"].sum())
+        avg_perf = float(matches["perf_index"].mean())
+        avg_debate = float(matches["debate_rate"].mean())
+        total_comments = int(matches["comments"].sum())
+        total_likes = int(matches["likes"].sum())
+
+        top_piece = matches.sort_values("views", ascending=False).iloc[0]
+
+        # Peso compuesto donde la frecuencia de piezas y el volumen de vistas dominan
+        raw_weight = (
+            (pieces * 15.0)
+            + (np.log1p(total_views) * 5.5)
+            + (avg_perf * 9.0)
+            + (min(avg_debate, 60.0) * 0.35)
+        )
+
+        # Semáforo de temperatura / Tag de calor
+        if avg_debate >= 18.0 or total_comments >= 600:
+            heat_badge = f"🔥 {avg_debate:.1f} com/1K"
+            heat_label = "Alta Polémica"
+            heat_type = "fire"
+            sugg_format = "Debate en mesa de streaming + Short reactivo (30-45s) con la declaración más intensa."
+        elif avg_perf >= 1.25:
+            heat_badge = f"🚀 {avg_perf:.1f}x views"
+            heat_label = "Imán Algorítmico"
+            heat_type = "rocket"
+            sugg_format = "Video estructurado de análisis (10-15m) en YouTube y Reel de gancho en Instagram."
+        elif pieces >= 3:
+            heat_badge = f"⚡ {pieces} piezas"
+            heat_label = "Eje Central"
+            heat_type = "eje"
+            sugg_format = "Segmento central del programa diario con panelistas y contextualización profunda."
+        else:
+            heat_badge = f"💡 {avg_perf:.1f}x"
+            heat_label = "En Radar"
+            heat_type = "radar"
+            sugg_format = "Pastilla ágil para redes o sondeo rápido con la comunidad."
+
+        # Diagnóstico y consejo del Oráculo
+        if avg_debate >= 18.0:
+            dynamic_diag = f"{base_diag} Está generando una tasa extrema de comentarios ({avg_debate:.1f} por cada 1.000 vistas). La comunidad siente urgencia por fijar posición."
+        elif avg_perf >= 1.25:
+            dynamic_diag = f"{base_diag} El algoritmo premia este eje con un multiplicador de {avg_perf:.1f}x sobre la mediana del canal."
+        elif pieces >= 3:
+            dynamic_diag = f"{base_diag} Es un pilar recurrente del ciclo activo ({pieces} publicaciones), concentrando {total_views:,} vistas.".replace(",", ".")
+        else:
+            dynamic_diag = f"{base_diag} Mantiene presencia puntual con {pieces} pieza(s) y potencial de escalamiento."
+
+        results.append(
+            {
+                "name": name,
+                "kind": kind,
+                "category": category,
+                "pieces": pieces,
+                "total_views": total_views,
+                "avg_perf": round(avg_perf, 2),
+                "avg_debate": round(avg_debate, 1),
+                "total_comments": total_comments,
+                "total_likes": total_likes,
+                "raw_weight": raw_weight,
+                "heat_badge": heat_badge,
+                "heat_label": heat_label,
+                "heat_type": heat_type,
+                "oracle_diagnostic": dynamic_diag,
+                "oracle_hook": base_hook,
+                "oracle_format": sugg_format,
+                "top_title": str(top_piece["title"]),
+                "top_url": str(top_piece["url"]),
+                "top_platform": str(top_piece["platform"]),
+                "top_views": int(top_piece["views"]),
+                "top_thumb": str(top_piece.get("thumbnail", "")),
+            }
+        )
+
+    if not results:
+        return []
+
+    # Ordenar de mayor a menor peso
+    results.sort(key=lambda x: x["raw_weight"], reverse=True)
+
+    weights = [r["raw_weight"] for r in results]
+    min_w = min(weights)
+    max_w = max(weights)
+    diff = max_w - min_w if max_w > min_w else 1.0
+
+    for r in results:
+        norm = (r["raw_weight"] - min_w) / diff
+        r["weight_norm"] = round(norm, 3)
+        # Font size va de 0.90rem (conceptos pequeños) hasta 2.30rem (conceptos dominantes como Kast o Mayol)
+        r["font_size_rem"] = round(0.90 + (norm * 1.40), 2)
+        r["font_weight"] = 900 if norm >= 0.70 else (800 if norm >= 0.35 else 600)
+
+    return results
+

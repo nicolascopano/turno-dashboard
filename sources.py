@@ -275,6 +275,11 @@ def demo_data() -> pd.DataFrame:
         ("📉 ¿Cómo el fondo más seguro de las AFP terminó perdiendo más del 10%? #TurnoAM", "Instagram", "Reel", 31000),
         ("¡Especial 7 AÑOS del 18-O! ¿La DERECHA está en CONTRA de la VIOLENCIA? | #TurnoAM", "YouTube", "En vivo", 19500),
         ("🇨🇱 El presidente José Antonio Kast en visita oficial a Bolivia", "Instagram", "Carrusel", 18000),
+        ("🔥 Alberto Mayol ANALIZA el quiebre de la IZQUIERDA y la arremetida de KAST | #TurnoEnVivo", "YouTube", "Video", 38000),
+        ("🚨 Caso Monsalve y Tohá: Las preguntas sin responder en La Moneda #TurnoAM", "YouTube", "Video", 29500),
+        ("⚖️ Cathy Barriga y arresto domiciliario: Nueva polémica en tribunales", "Instagram", "Reel", 72000),
+        ("💸 Alza de la luz y costo de vida: ¿Cómo impacta al bolsillo chileno? #TurnoZ", "Instagram", "Reel", 64000),
+        ("🔮 Sammy Tarot predice el futuro político de Chile y el próximo presidente", "YouTube", "Video", 31000),
     ]
     rows = []
     for i in range(80):
