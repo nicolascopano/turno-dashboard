@@ -1685,8 +1685,12 @@ with tab_super:
             )
         selected_item = next((c for c in concept_cloud if c["name"] == sel_oracle_name), concept_cloud[0])
         with or_c2:
-            st.write("")
-            st.caption(f"📌 **{selected_item['category']}**<br>Prioridad: **#{concept_cloud.index(selected_item) + 1}** en peso relativo.")
+            render_html(
+                f"""<div style="font-size:0.82rem;color:#94a3b8;line-height:1.4;margin-top:10px;">
+                  📌 <b style="color:#ffffff">{escape(selected_item['category'])}</b><br>
+                  Prioridad: <b style="color:#38bdf8">#{concept_cloud.index(selected_item) + 1}</b> en peso relativo.
+                </div>"""
+            )
 
         render_html(
             f"""<div class="oracle-card-detail">
